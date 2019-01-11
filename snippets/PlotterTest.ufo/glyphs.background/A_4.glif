@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<glyph name="A4" format="2">
+  <advance width="500"/>
+  <outline>
+    <contour>
+      <point x="0" y="307" type="move"/>
+      <point x="0" y="302" type="line"/>
+    </contour>
+    <contour>
+      <point x="-5" y="297" type="move"/>
+      <point x="-10" y="297" type="line"/>
+    </contour>
+    <contour>
+      <point x="220" y="297" type="move"/>
+      <point x="215" y="297" type="line"/>
+    </contour>
+    <contour>
+      <point x="210" y="302" type="move"/>
+      <point x="210" y="307" type="line"/>
+    </contour>
+    <contour>
+      <point x="210" y="-10" type="move"/>
+      <point x="210" y="-5" type="line"/>
+    </contour>
+    <contour>
+      <point x="215" y="0" type="move"/>
+      <point x="220" y="0" type="line"/>
+    </contour>
+    <contour>
+      <point x="-10" y="0" type="move"/>
+      <point x="-5" y="0" type="line"/>
+    </contour>
+    <contour>
+      <point x="0" y="-5" type="move"/>
+      <point x="0" y="-10" type="line"/>
+    </contour>
+  </outline>
+</glyph>

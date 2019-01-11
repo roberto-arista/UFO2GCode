@@ -1,0 +1,5 @@
+
+1. clone the repo somewhere on your machine
+2. get to the repo folder with terminal
+3. run pip on that folder using your favourite python version, for example
+python3 -m pip install -e .
