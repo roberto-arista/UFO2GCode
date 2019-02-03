@@ -1,4 +1,5 @@
 # UFO2GCode
-From UFO Glyphs to GCode
 
-more info soon...
+A set of tools for converting UFO data into GCode for my plotter pen.
+Still WIP.
+
