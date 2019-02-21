@@ -14,9 +14,6 @@ from UFO2GCode.calcFunctions import convertCurveToArcs, Point, isClockwise
 RAPID_MOVE = 'G0'
 DRAWING_MOVE = 'G1'
 
-FREE_MOVE_FEED = '1500'
-DRAWING_FEED = '1500'
-
 LIFT_PEN = 'M03 S0'
 
 ### Functions & Procedures
@@ -29,23 +26,28 @@ def dropPen(start, end, step):
 
 class GCodePen(BasePen):
 
-    def __init__(self, glyphSet, scaling=1):
+    def __init__(self, glyphSet,
+                 freeMoveFeed, drawingFeed):
+
         BasePen.__init__(self, glyphSet)
+
+        self.freeMoveFeed = freeMoveFeed
+        self.drawingFeed  = drawingFeed
+
         self._commands = [
             'G21',         # set units to mm
             'M03 S0',      # lift the pen
-            'G92 X0 Y0'    # set the relative zero
+            # 'G92 X0 Y0'    # set the relative zero
         ]
-        self.scaling = scaling
         self.lastPt = None
 
     def _moveTo(self, pt):
         self._commands.append('; _moveTo()')
         self.firstPt = Point(*pt)
         cmd = [f'{RAPID_MOVE}',
-               f'X{self.firstPt.x*self.scaling:.4f}',
-               f'Y{self.firstPt.y*self.scaling:.4f}',
-               f'F{FREE_MOVE_FEED}']
+               f'X{self.firstPt.x:.4f}',
+               f'Y{self.firstPt.y:.4f}',
+               f'F{self.freeMoveFeed}']
         self._commands.append(' '.join(cmd))
         self._commands.extend(dropPen(10, 90, 10))
         self.lastPt = self.firstPt
@@ -54,9 +56,9 @@ class GCodePen(BasePen):
         self._commands.append('; _lineTo()')
         linePt = Point(*pt)
         cmd = [f'{DRAWING_MOVE}',
-               f'X{linePt.x*self.scaling:.4f}',
-               f'Y{linePt.y*self.scaling:.4f}',
-               f'F{DRAWING_FEED}']
+               f'X{linePt.x:.4f}',
+               f'Y{linePt.y:.4f}',
+               f'F{self.drawingFeed}']
         self._commands.append(' '.join(cmd))
         self.lastPt = linePt
 
@@ -92,7 +94,7 @@ class GCodePen(BasePen):
                 f'Y{arcEnd.y:.4f}',
                 f'I{(center.x-cos(startAngle)*radius)-center.x:.4f}',
                 f'J{(center.y-sin(startAngle)*radius)-center.y:.4f}',
-                f'F{DRAWING_FEED}']
+                f'F{self.drawingFeed}']
             cmds.append(' '.join(thisCmd))
 
         self._commands.append('\n'.join(cmds))
@@ -102,9 +104,9 @@ class GCodePen(BasePen):
         self._commands.append('; _closePath()')
         if self.firstPt != self.lastPt:
             cmd = [f'{DRAWING_MOVE}',
-                   f'X{self.firstPt.x*self.scaling:.4f}',
-                   f'Y{self.firstPt.y*self.scaling:.4f}',
-                   f'F{DRAWING_FEED}']
+                   f'X{self.firstPt.x:.4f}',
+                   f'Y{self.firstPt.y:.4f}',
+                   f'F{self.drawingFeed}']
             self._commands.append(' '.join(cmd))
         self._commands.append(LIFT_PEN)
 
@@ -113,4 +115,7 @@ class GCodePen(BasePen):
         self._commands.append(LIFT_PEN)
 
     def getCommands(self):
+        # back to origin point
+        cmd = [f'{RAPID_MOVE}', 'X0 Y0', f'F{self.freeMoveFeed}']
+        self._commands.append(' '.join(cmd))
         return '\n'.join(self._commands)
